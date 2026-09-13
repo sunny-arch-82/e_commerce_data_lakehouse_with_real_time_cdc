@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<configuration>
+    <property>
+        <name>fs.s3a.threads.keepalivetime</name>
+        <value>60</value>
+        <description>Thread keep-alive time in seconds (numeric only)</description>
+    </property>
+    <property>
+        <name>fs.s3a.connection.timeout</name>
+        <value>200000</value>
+        <description>Socket connection timeout in milliseconds</description>
+    </property>
+    <property>
+        <name>fs.s3a.connection.establish.timeout</name>
+        <value>120000</value>
+        <description>Socket establishment timeout in milliseconds</description>
+    </property>
+    <property>
+        <name>fs.s3a.connection.request.timeout</name>
+        <value>60000</value>
+        <description>Request timeout in milliseconds</description>
+    </property>
+    <property>
+        <name>fs.s3a.executor.capacity</name>
+        <value>16</value>
+        <description>Thread pool capacity</description>
+    </property>
+    <property>
+        <name>fs.s3a.threads.core</name>
+        <value>15</value>
+        <description>Core number of threads in S3A thread pool</description>
+    </property>
+    <property>
+        <name>fs.s3a.threads.max</name>
+        <value>96</value>
+        <description>Maximum number of threads in S3A thread pool</description>
+    </property>
+    <property>
+        <name>fs.s3a.max.total.tasks</name>
+        <value>50</value>
+        <description>Maximum number of total tasks</description>
+    </property>
+    <property>
+        <name>fs.s3a.retry.limit</name>
+        <value>3</value>
+        <description>Number of retries for S3A operations</description>
+    </property>
+    <property>
+        <name>fs.s3a.retry.interval</name>
+        <value>500</value>
+        <description>Retry interval in milliseconds</description>
+    </property>
+    <property>
+        <name>fs.s3a.socket.recv.buffer</name>
+        <value>65536</value>
+        <description>Socket receive buffer size</description>
+    </property>
+    <property>
+        <name>fs.s3a.socket.send.buffer</name>
+        <value>65536</value>
+        <description>Socket send buffer size</description>
+    </property>
+    <property>
+        <name>fs.s3a.block.size</name>
+        <value>134217728</value>
+        <description>Block size for S3A filesystem (128MB)</description>
+    </property>
+    <property>
+        <name>fs.s3a.buffer.dir</name>
+        <value>/tmp</value>
+        <description>Temporary directory for S3A buffers</description>
+    </property>
+    <property>
+        <name>hadoop.rpc.timeout</name>
+        <value>60000</value>
+        <description>RPC timeout in milliseconds</description>
+    </property>
+    <property>
+        <name>ipc.client.connection.maxidletime</name>
+        <value>10000</value>
+        <description>IPC client connection max idle time in milliseconds</description>
+    </property>
+    <property>
+        <name>ipc.client.connect.timeout</name>
+        <value>20000</value>
+        <description>IPC client connect timeout in milliseconds</description>
+    </property>
+    <property>
+        <name>fs.s3a.connection.ssl.timeout</name>
+        <value>200000</value>
+        <description>SSL connection timeout in milliseconds</description>
+    </property>
+    <property>
+        <name>fs.s3a.socket.timeout</name>
+        <value>200000</value>
+        <description>Socket timeout in milliseconds</description>
+    </property>
+    <property>
+        <name>fs.s3a.connection.ttl</name>
+        <value>60000</value>
+        <description>Connection TTL in milliseconds</description>
+    </property>
+    <property>
+        <name>fs.s3a.connection.idle.timeout</name>
+        <value>30000</value>
+        <description>Connection idle timeout in milliseconds</description>
+    </property>
+    <property>
+        <name>fs.s3a.readahead.range</name>
+        <value>65536</value>
+        <description>Readahead range in bytes</description>
+    </property>
+    <property>
+        <name>fs.s3a.change.detection.mode</name>
+        <value>none</value>
+        <description>Disable change detection for performance</description>
+    </property>
+    <property>
+        <name>fs.s3a.change.detection.version.required</name>
+        <value>false</value>
+    </property>
+    <property>
+        <name>fs.s3a.multipart.purge</name>
+        <value>false</value>
+    </property>
+    <property>
+        <name>fs.s3a.multipart.purge.age</name>
+        <value>0</value>
+    </property>
+    <property>
+        <name>fs.s3a.multipart.size</name>
+        <value>67108864</value>
+        <description>64MB multipart upload size</description>
+    </property>
+    <property>
+        <name>fs.s3a.multipart.threshold</name>
+        <value>134217728</value>
+        <description>128MB multipart threshold</description>
+    </property>
+    <property>
+        <name>fs.s3a.assumed.role.session.duration</name>
+        <value>3600</value>
+    </property>
+    <property>
+        <name>fs.s3a.session.token</name>
+        <value></value>
+    </property>
+    <property>
+        <name>fs.s3a.listing.page.size</name>
+        <value>5000</value>
+    </property>
+    <property>
+        <name>fs.s3a.committer.threads.keepalivetime</name>
+        <value>60000</value>
+    </property>
+    <property>
+        <name>fs.s3a.prefetch.block.size</name>
+        <value>8388608</value>
+    </property>
+</configuration>

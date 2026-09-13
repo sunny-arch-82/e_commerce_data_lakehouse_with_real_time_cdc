@@ -1,0 +1,146 @@
+version: 2
+
+models:
+  - name: intermediate_order_items
+    description: "Order items enriched with product, order, user, and distribution center info"
+    columns:
+      - name: order_item_id
+        tests:
+          - not_null:
+              severity: error
+          - unique:
+              severity: error
+      - name: order_id
+        tests:
+          - not_null:
+              severity: error
+          - relationships:
+              to: ref('intermediate_orders')
+              field: order_id
+              severity: warn
+      - name: product_id
+        tests:
+          - not_null:
+              severity: error
+          - relationships:
+              to: ref('intermediate_products')
+              field: product_id
+              severity: warn
+      - name: revenue
+        tests:
+          - not_null:
+              severity: error
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              max_value: 100000
+      - name: customer_country
+        tests:
+          - not_null:
+              severity: warn
+      - name: distribution_center
+        tests:
+          - not_null:
+              severity: warn
+
+  - name: intermediate_orders
+    description: "Orders enriched with user info and timing metrics"
+    columns:
+      - name: order_id
+        tests:
+          - not_null:
+              severity: error
+          - unique:
+              severity: error
+      - name: user_id
+        tests:
+          - not_null:
+              severity: error
+          - relationships:
+              to: ref('intermediate_users')
+              field: user_id
+              severity: warn
+      - name: order_status
+        tests:
+          - not_null:
+              severity: error
+          - accepted_values:
+              values: ['Processing', 'Shipped', 'Delivered', 'Cancelled', 'Returned']
+              severity: error
+      - name: customer_name
+        tests:
+          - not_null:
+              severity: warn
+
+  - name: intermediate_events
+    description: "Web/app events enriched with user info"
+    columns:
+      - name: event_id
+        tests:
+          - not_null:
+              severity: error
+          - unique:
+              severity: warn
+      - name: event_type
+        tests:
+          - not_null:
+              severity: error
+      - name: session_id
+        tests:
+          - not_null:
+              severity: error
+      - name: browser
+        tests:
+          - not_null:
+              severity: error
+      - name: user_id
+        tests:
+          - relationships:
+              to: ref('intermediate_users')
+              field: user_id
+              severity: warn  # NULL is valid for ghost events
+
+  - name: intermediate_users
+    description: "User dimension — latest profile state from CDC"
+    columns:
+      - name: user_id
+        tests:
+          - not_null:
+              severity: error
+          - unique:
+              severity: error
+      - name: email
+        tests:
+          - not_null:
+              severity: error
+      - name: country
+        tests:
+          - not_null:
+              severity: warn
+
+  - name: intermediate_products
+    description: "Product dimension — latest catalog state with distribution center"
+    columns:
+      - name: product_id
+        tests:
+          - not_null:
+              severity: error
+          - unique:
+              severity: error
+      - name: product_name
+        tests:
+          - not_null:
+              severity: error
+      - name: cost
+        tests:
+          - not_null:
+              severity: error
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              max_value: 10000
+      - name: retail_price
+        tests:
+          - not_null:
+              severity: error
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              max_value: 10000

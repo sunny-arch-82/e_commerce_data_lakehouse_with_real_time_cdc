@@ -1,0 +1,222 @@
+version: 2
+
+models:
+  # ── Dimensions ──────────────────────────────────────────────────────────────
+
+  - name: dim_date
+    description: "Calendar dimension — 2020–2030, used as FK in all fact tables via date_key"
+    columns:
+      - name: date_key
+        tests:
+          - not_null:
+              severity: error
+          - unique:
+              severity: error
+      - name: full_date
+        tests:
+          - not_null:
+              severity: error
+          - unique:
+              severity: error
+
+  - name: dim_customers
+    description: "Customer dimension — latest profile state + lifetime purchase metrics"
+    columns:
+      - name: user_id
+        tests:
+          - not_null:
+              severity: error
+          - unique:
+              severity: error
+      - name: email
+        tests:
+          - not_null:
+              severity: error
+      - name: age_group
+        tests:
+          - not_null:
+              severity: warn
+          - accepted_values:
+              values: ['18-24', '25-34', '35-44', '45-54', '55+']
+              severity: warn
+      - name: customer_tier
+        tests:
+          - not_null:
+              severity: error
+          - accepted_values:
+              values: ['high', 'medium', 'low', 'no_purchase']
+              severity: error
+      - name: total_revenue
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              max_value: 1000000
+              severity: error
+
+  - name: dim_products
+    description: "Product dimension — latest catalog state with distribution center and price tier"
+    columns:
+      - name: product_id
+        tests:
+          - not_null:
+              severity: error
+          - unique:
+              severity: error
+      - name: product_name
+        tests:
+          - not_null:
+              severity: error
+      - name: price_tier
+        tests:
+          - accepted_values:
+              values: ['premium', 'mid', 'budget']
+              severity: error
+      - name: cost
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              max_value: 10000
+              severity: error
+      - name: retail_price
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              max_value: 10000
+              severity: error
+
+  # ── Facts ───────────────────────────────────────────────────────────────────
+
+  - name: fct_orders
+    description: "Order-level fact — grain: 1 row per order, FK to dim_customers and dim_date"
+    columns:
+      - name: order_id
+        tests:
+          - not_null:
+              severity: error
+          - unique:
+              severity: error
+      - name: user_id
+        tests:
+          - not_null:
+              severity: error
+          - relationships:
+              to: ref('dim_customers')
+              field: user_id
+              severity: warn
+      - name: date_key
+        tests:
+          - not_null:
+              severity: error
+          - relationships:
+              to: ref('dim_date')
+              field: date_key
+              severity: warn
+      - name: order_status
+        tests:
+          - accepted_values:
+              values: ['Processing', 'Shipped', 'Delivered', 'Cancelled', 'Returned']
+              severity: error
+
+  - name: fct_order_items
+    description: "Item-level fact — grain: 1 row per order item, FK to all dims. Most granular fact table."
+    columns:
+      - name: order_item_id
+        tests:
+          - not_null:
+              severity: error
+          - unique:
+              severity: error
+      - name: order_id
+        tests:
+          - not_null:
+              severity: error
+          - relationships:
+              to: ref('fct_orders')
+              field: order_id
+              severity: warn
+      - name: user_id
+        tests:
+          - relationships:
+              to: ref('dim_customers')
+              field: user_id
+              severity: warn
+      - name: product_id
+        tests:
+          - not_null:
+              severity: error
+          - relationships:
+              to: ref('dim_products')
+              field: product_id
+              severity: warn
+      - name: date_key
+        tests:
+          - not_null:
+              severity: error
+          - relationships:
+              to: ref('dim_date')
+              field: date_key
+              severity: warn
+      - name: revenue
+        tests:
+          - not_null:
+              severity: error
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              max_value: 100000
+              severity: error
+
+  - name: fct_events
+    description: "Event-level fact — grain: 1 row per web/app event, FK to dim_customers and dim_date"
+    columns:
+      - name: event_id
+        tests:
+          - not_null:
+              severity: error
+          - unique:
+              severity: error
+      - name: session_id
+        tests:
+          - not_null:
+              severity: error
+      - name: event_type
+        tests:
+          - not_null:
+              severity: error
+      - name: date_key
+        tests:
+          - not_null:
+              severity: error
+          - relationships:
+              to: ref('dim_date')
+              field: date_key
+              severity: warn
+      - name: user_id
+        tests:
+          - relationships:
+              to: ref('dim_customers')
+              field: user_id
+              severity: warn  # NULL is valid for ghost events
+
+  - name: fct_sessions
+    description: "Session-level fact — grain: 1 row per session, funnel stages and duration"
+    columns:
+      - name: session_id
+        tests:
+          - not_null:
+              severity: error
+          - unique:
+              severity: error
+      - name: date_key
+        tests:
+          - not_null:
+              severity: error
+          - relationships:
+              to: ref('dim_date')
+              field: date_key
+              severity: warn
+      - name: total_events
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 1
+              max_value: 10000
+              severity: error

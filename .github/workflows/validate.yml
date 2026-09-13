@@ -1,0 +1,54 @@
+name: Validate repository
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  static-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install validation dependency
+        run: pip install pyyaml
+
+      - name: Validate Python syntax
+        run: |
+          python -m py_compile \
+            workspace/stream_processor.py \
+            workspace/replay_quarantine.py \
+            infra/airflow/dags/ecommerce_cdc_pipeline_dag.py \
+            infra/data-generator/src/*.py
+
+      - name: Validate JSON and YAML
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import yaml
+
+          for path in Path('.').rglob('*.json'):
+              json.loads(path.read_text())
+          for pattern in ('*.yml', '*.yaml'):
+              for path in Path('.').rglob(pattern):
+                  yaml.safe_load(path.read_text())
+          PY
+
+      - name: Validate shell syntax
+        run: |
+          bash -n infra/debezium/start-with-connectors.sh
+          bash -n infra/hive-metastore/entrypoint.sh
+          bash -n infra/jupyter-lab/start-jupyter.sh
+          bash -n infra/superset/entrypoint.sh
+
+      - name: Validate Docker Compose model
+        run: |
+          cp .env.example .env
+          docker compose --profile core --profile datagen --profile explore --profile airflow config >/dev/null

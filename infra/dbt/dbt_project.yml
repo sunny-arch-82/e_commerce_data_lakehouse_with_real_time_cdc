@@ -1,0 +1,48 @@
+name: ecommerce_cdc_lakehouse
+version: "1.0.0"
+config-version: 2
+
+profile: ecommerce_trino
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+# Ensure all schemas exist with correct MinIO paths before any model runs.
+# Without this, Trino auto-creates schemas under 'warehouse/' which diverges
+# from the notebook's 'staging/' path, causing "Metadata not found" errors.
+on-run-start:
+  - "CREATE SCHEMA IF NOT EXISTS staging WITH (location = 's3a://lakehouse/staging/')"
+  - "CREATE SCHEMA IF NOT EXISTS intermediate WITH (location = 's3a://lakehouse/intermediate/')"
+  - "CREATE SCHEMA IF NOT EXISTS mart WITH (location = 's3a://lakehouse/mart/')"
+
+models:
+  ecommerce_cdc_lakehouse:
+    +on_table_exists: drop  # Atomic replacement to ensure metadata consistency
+    staging:
+      +schema: staging
+      +materialized: ephemeral
+    intermediate:
+      +schema: intermediate
+      +materialized: incremental
+      +incremental_strategy: delete+insert
+      +post-hook:
+        - "ALTER TABLE {{ this }} EXECUTE optimize"
+    mart:
+      +schema: mart
+      +materialized: table
+      +post-hook:
+        - "ALTER TABLE {{ this }} EXECUTE optimize"
+      dim:
+        +schema: mart
+        +materialized: table
+      fact:
+        +schema: mart
+        +materialized: table

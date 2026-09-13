@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<configuration>
+  <property>
+    <name>hive.metastore.uris</name>
+    <value>thrift://hive-metastore:9083</value>
+  </property>
+  <property>
+    <name>hive.metastore.warehouse.dir</name>
+    <value>s3a://lakehouse/</value>
+  </property>
+  <property>
+    <name>hive.metastore.disallow.incompatible.col.type.changes</name>
+    <value>false</value>
+  </property>
+  <property>
+    <name>hive.metastore.rename.table</name>
+    <value>true</value>
+  </property>
+</configuration>

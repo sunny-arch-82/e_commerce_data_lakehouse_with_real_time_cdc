@@ -1,0 +1,16 @@
+{
+  "type": "record",
+  "name": "orders",
+  "fields": [
+    {"name": "id", "type": "string"},
+    {"name": "user_id", "type": ["null", "string"], "default": null},
+    {"name": "status", "type": ["null", "string"], "default": null},
+    {"name": "num_of_items", "type": ["null", "int"], "default": null},
+    {"name": "created_at", "type": ["null", "string"], "default": null},
+    {"name": "updated_at", "type": ["null", "string"], "default": null},
+    {"name": "returned_at", "type": ["null", "string"], "default": null},
+    {"name": "shipped_at", "type": ["null", "string"], "default": null},
+    {"name": "delivered_at", "type": ["null", "string"], "default": null},
+    {"name": "cancelled_at", "type": ["null", "string"], "default": null}
+  ]
+}

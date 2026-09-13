@@ -1,0 +1,19 @@
+{
+  "type": "record",
+  "name": "events",
+  "fields": [
+    {"name": "id", "type": "string"},
+    {"name": "user_id", "type": ["null", "string"], "default": null},
+    {"name": "sequence_number", "type": ["null", "int"], "default": null},
+    {"name": "session_id", "type": ["null", "string"], "default": null},
+    {"name": "ip_address", "type": ["null", "string"], "default": null},
+    {"name": "city", "type": ["null", "string"], "default": null},
+    {"name": "state", "type": ["null", "string"], "default": null},
+    {"name": "postal_code", "type": ["null", "string"], "default": null},
+    {"name": "browser", "type": ["null", "string"], "default": null},
+    {"name": "traffic_source", "type": ["null", "string"], "default": null},
+    {"name": "uri", "type": ["null", "string"], "default": null},
+    {"name": "event_type", "type": ["null", "string"], "default": null},
+    {"name": "created_at", "type": ["null", "string"], "default": null}
+  ]
+}

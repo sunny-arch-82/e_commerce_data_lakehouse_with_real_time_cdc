@@ -1,0 +1,13 @@
+# Optional local Python environment. Docker images pin their own service dependencies.
+pyspark==3.5.0
+delta-spark==3.0.0
+kafka-python==2.0.2
+confluent-kafka==2.3.0
+psycopg2-binary==2.9.9
+faker==20.1.0
+python-dotenv==1.0.0
+pyarrow==14.0.1
+pandas==2.1.4
+minio==7.2.0
+trino[sqlalchemy]
+requests

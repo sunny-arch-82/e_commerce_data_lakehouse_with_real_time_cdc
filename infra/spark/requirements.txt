@@ -1,0 +1,4 @@
+pyarrow
+pandas
+fastavro
+confluent-kafka[avro]

@@ -1,0 +1,114 @@
+version: 2
+
+sources:
+  - name: staging
+    description: "Raw Delta Lake staging tables sourced from the e-commerce PostgreSQL CDC source: CDC tables via Spark notebook (typed columns from Avro), static tables bootstrapped via JDBC"
+    database: delta
+    schema: staging
+    loaded_at_field: kafka_ts
+    freshness:
+      warn_after: {count: 1, period: hour}
+      error_after: {count: 6, period: hour}
+    tables:
+      - name: orders
+        description: "CDC orders written by notebook UDF (typed columns from Avro schema)"
+        columns:
+          - name: id
+          - name: kafka_ts
+          - name: partition
+          - name: offset
+          - name: status
+          - name: num_of_items
+          - name: created_at
+          - name: updated_at
+          - name: shipped_at
+          - name: delivered_at
+          - name: returned_at
+          - name: cancelled_at
+          - name: user_id
+      - name: order_items
+        description: "CDC order items written by notebook UDF (typed columns from Avro schema)"
+        columns:
+          - name: id
+          - name: kafka_ts
+          - name: partition
+          - name: offset
+          - name: order_id
+          - name: product_id
+          - name: status
+          - name: quantity
+          - name: sale_price
+          - name: created_at
+          - name: updated_at
+          - name: shipped_at
+          - name: delivered_at
+          - name: returned_at
+          - name: cancelled_at
+      - name: events
+        description: "CDC web/app events written by notebook UDF (typed columns from Avro schema)"
+        columns:
+          - name: id
+          - name: kafka_ts
+          - name: partition
+          - name: offset
+          - name: user_id
+          - name: session_id
+          - name: sequence_number
+          - name: ip_address
+          - name: city
+          - name: state
+          - name: postal_code
+          - name: browser
+          - name: traffic_source
+          - name: uri
+          - name: event_type
+          - name: created_at
+      - name: users
+        description: "CDC users written by notebook UDF (typed columns from Avro schema)"
+        columns:
+          - name: id
+          - name: kafka_ts
+          - name: partition
+          - name: offset
+          - name: first_name
+          - name: last_name
+          - name: email
+          - name: age
+          - name: gender
+          - name: street_address
+          - name: postal_code
+          - name: city
+          - name: state
+          - name: country
+          - name: latitude
+          - name: longitude
+          - name: traffic_source
+          - name: created_at
+          - name: updated_at
+      - name: products
+        identifier: ref_products
+        description: "Static product catalog bootstrapped from PostgreSQL"
+        freshness: null
+        columns:
+          - name: id
+          - name: name
+          - name: category
+          - name: brand
+          - name: department
+          - name: sku
+          - name: cost
+          - name: retail_price
+          - name: distribution_center_id
+          - name: operation
+          - name: event_ts_ms
+      - name: dist_centers
+        identifier: ref_dist_centers
+        description: "Static distribution centers bootstrapped from PostgreSQL"
+        freshness: null
+        columns:
+          - name: id
+          - name: name
+          - name: latitude
+          - name: longitude
+          - name: operation
+          - name: event_ts_ms

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<configuration>
+    <!-- Thrift URI (Hive 4.x) -->
+    <property>
+        <name>metastore.thrift.uris</name>
+        <value>thrift://hive-metastore:9083</value>
+    </property>
+
+    <!-- MariaDB backend -->
+    <property>
+        <name>javax.jdo.option.ConnectionDriverName</name>
+        <value>com.mysql.cj.jdbc.Driver</value>
+    </property>
+    <property>
+        <name>javax.jdo.option.ConnectionURL</name>
+        <value>jdbc:mysql://mariadb:3306/metastore_db?createDatabaseIfNotExist=true&amp;useSSL=false&amp;allowPublicKeyRetrieval=true</value>
+    </property>
+    <property>
+        <name>javax.jdo.option.ConnectionUserName</name>
+        <value>admin</value>
+    </property>
+    <property>
+        <name>javax.jdo.option.ConnectionPassword</name>
+        <value>admin123</value>
+    </property>
+
+    <!-- Warehouse -->
+    <property>
+        <name>hive.metastore.warehouse.dir</name>
+        <value>s3a://lakehouse/</value>
+    </property>
+    <property>
+        <name>hive.metastore.warehouse.external.dir</name>
+        <value>s3a://lakehouse/warehouse</value>
+    </property>
+
+    <!-- S3A / MinIO -->
+    <property>
+        <name>fs.s3a.endpoint</name>
+        <value>http://minio:9000</value>
+    </property>
+    <property>
+        <name>fs.s3a.access.key</name>
+        <value>minio</value>
+    </property>
+    <property>
+        <name>fs.s3a.secret.key</name>
+        <value>minio123</value>
+    </property>
+    <property>
+        <name>fs.s3a.path.style.access</name>
+        <value>true</value>
+    </property>
+    <property>
+        <name>fs.s3a.connection.ssl.enabled</name>
+        <value>false</value>
+    </property>
+    <property>
+        <name>fs.s3a.impl</name>
+        <value>org.apache.hadoop.fs.s3a.S3AFileSystem</value>
+    </property>
+    <property>
+        <name>fs.s3a.aws.credentials.provider</name>
+        <value>org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider</value>
+    </property>
+
+    <!-- Hive compatibility -->
+    <property>
+        <name>hive.metastore.client.capability.check</name>
+        <value>false</value>
+    </property>
+    <property>
+        <name>hive.security.authorization.enabled</name>
+        <value>false</value>
+    </property>
+    <property>
+        <name>hive.metastore.authorization.storage.checks</name>
+        <value>false</value>
+    </property>
+
+    <!-- Partition expression (standalone metastore has no hive-exec JAR) -->
+    <property>
+        <name>metastore.expression.proxy</name>
+        <value>org.apache.hadoop.hive.metastore.DefaultPartitionExpressionProxy</value>
+    </property>
+    <property>
+        <name>metastore.task.threads.always</name>
+        <value>org.apache.hadoop.hive.metastore.events.EventCleanerTask</value>
+    </property>
+</configuration>

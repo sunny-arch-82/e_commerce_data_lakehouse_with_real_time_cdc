@@ -1,0 +1,13 @@
+ecommerce_trino:
+  target: dev
+  outputs:
+    dev:
+      type: trino
+      method: none
+      host: "{{ env_var('TRINO_HOST', 'trino') }}"
+      port: "{{ env_var('TRINO_PORT', '8080') | int }}"
+      user: trino
+      database: delta
+      schema: silver
+      threads: 2
+

@@ -1,0 +1,18 @@
+{
+  "type": "record",
+  "name": "order_items",
+  "fields": [
+    {"name": "id", "type": "string"},
+    {"name": "order_id", "type": ["null", "string"], "default": null},
+    {"name": "product_id", "type": ["null", "long"], "default": null},
+    {"name": "status", "type": ["null", "string"], "default": null},
+    {"name": "quantity", "type": ["null", "int"], "default": null},
+    {"name": "sale_price", "type": ["null", "double"], "default": null},
+    {"name": "created_at", "type": ["null", "string"], "default": null},
+    {"name": "updated_at", "type": ["null", "string"], "default": null},
+    {"name": "shipped_at", "type": ["null", "string"], "default": null},
+    {"name": "delivered_at", "type": ["null", "string"], "default": null},
+    {"name": "returned_at", "type": ["null", "string"], "default": null},
+    {"name": "cancelled_at", "type": ["null", "string"], "default": null}
+  ]
+}

@@ -1,0 +1,95 @@
+version: 2
+
+models:
+  - name: staging_orders
+    description: "Latest CDC state of each order from Delta Lake staging layer"
+    columns:
+      - name: id
+        tests:
+          - not_null:
+              severity: error
+      - name: user_id
+        tests:
+          - not_null:
+              severity: error
+      - name: status
+        tests:
+          - accepted_values:
+              values: ['Processing', 'Shipped', 'Delivered', 'Cancelled', 'Returned']
+              severity: error
+
+  - name: staging_order_items
+    description: "Latest CDC state of each order item"
+    columns:
+      - name: id
+        tests:
+          - not_null:
+              severity: error
+      - name: order_id
+        tests:
+          - not_null:
+              severity: error
+      - name: product_id
+        tests:
+          - not_null:
+              severity: error
+      - name: sale_price
+        tests:
+          - not_null:
+              severity: error
+
+  - name: staging_events
+    description: "Web and app events from CDC"
+    columns:
+      - name: id
+        tests:
+          - not_null:
+              severity: error
+      - name: event_type
+        tests:
+          - not_null:
+              severity: error
+      - name: session_id
+        tests:
+          - not_null:
+              severity: error
+
+  - name: staging_users
+    description: "Latest CDC state of each user (deduped)"
+    columns:
+      - name: id
+        tests:
+          - not_null:
+              severity: error
+          - unique:
+              severity: error
+      - name: email
+        tests:
+          - not_null:
+              severity: error
+
+  - name: staging_products
+    description: "Latest CDC state of each product (deduped)"
+    columns:
+      - name: id
+        tests:
+          - not_null:
+              severity: error
+          - unique:
+              severity: error
+      - name: cost
+        tests:
+          - not_null:
+              severity: error
+      - name: retail_price
+        tests:
+          - not_null:
+              severity: error
+
+  - name: staging_dist_centers
+    description: "Distribution center reference data"
+    columns:
+      - name: id
+        tests:
+          - not_null:
+              severity: error
