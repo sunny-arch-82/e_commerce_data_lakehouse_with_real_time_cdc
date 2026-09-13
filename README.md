@@ -113,7 +113,7 @@ Metrics are stored in `monitoring.cdc_batch_metrics`. The Airflow DAG performs a
 - Docker Engine
 - Docker Compose v2
 - Make
-- 16 GB RAM recommended for the complete stack
+
 
 ### 1. Configure local environment
 
